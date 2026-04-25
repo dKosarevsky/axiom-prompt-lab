@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
-description: A/B suite for compact-v0.1.0 against a no-instructions baseline.
+description: Report A/B suite for compact-v0.1.0 against a no-instructions baseline.
 
-outputPath: ../reports/runs/latest/results.html
+outputPath: ../reports/runs/report/results.html
 
 prompts:
   - id: file://prompts/baseline-chat.json
@@ -35,6 +35,6 @@ tests:
   - file://cases/freshness.yaml
 
 commandLineOptions:
-  grader: openai:gpt-5-mini
-  repeat: 1
+  grader: openai:gpt-5
+  repeat: 3
   table: true

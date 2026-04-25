@@ -7,6 +7,7 @@
     control: positive
   assert:
     - type: llm-rubric
+      metric: agent-architecture
       value: |
         The answer should cover tool permissions, state vs memory, retries/fallbacks,
         human review gates, prompt injection risk, observability/tracing, evals,
@@ -21,8 +22,8 @@
     control: negative
   assert:
     - type: llm-rubric
+      metric: verbosity-control
       value: |
         The answer should not propose an agent platform. It should give a simple,
         safe script approach with dry-run, backups or git safety, input validation,
         and verification.
-

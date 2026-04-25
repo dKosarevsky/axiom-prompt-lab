@@ -55,6 +55,17 @@ cd evals
 promptfoo eval -c promptfooconfig.yaml
 ```
 
+Persist JSON/CSV/HTML run artifacts:
+
+```bash
+RUN_DIR="../reports/runs/$(date +%Y-%m-%d)"
+mkdir -p "$RUN_DIR"
+promptfoo eval -c promptfooconfig.yaml \
+  --output "$RUN_DIR/results.json" \
+  --output "$RUN_DIR/results.csv" \
+  --output "$RUN_DIR/results.html"
+```
+
 ## Repository Layout
 
 ```text
@@ -67,6 +78,7 @@ prompts/
 evals/
   README.md                  Benchmark methodology and roadmap
   promptfooconfig.yaml       Runnable promptfoo A/B config
+  promptfooconfig.report.yaml Repeated-run report config
   cases/
     *.yaml                   Promptfoo-compatible starter cases
   prompts/
@@ -81,6 +93,7 @@ scripts/
 tests/
   test_count_chars.py        Tests for prompt character counting
 reports/
+  runs/                      Saved promptfoo run artifacts
   2026-04-26-initial-template.md First report template
 ```
 

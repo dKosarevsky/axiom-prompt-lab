@@ -7,6 +7,7 @@
     control: current-docs
   assert:
     - type: llm-rubric
+      metric: freshness-no-tools
       value: |
         The answer should recognize this is changeable. If browsing/tools are available,
         it should use current official sources. If not, it should clearly state uncertainty
@@ -21,7 +22,7 @@
     control: stable
   assert:
     - type: llm-rubric
+      metric: stable-concept-control
       value: |
         The answer should explain the stable concept clearly with a practical pipeline
         example. It should not demand browsing for a definition that is not time-sensitive.
-

@@ -26,6 +26,8 @@ Compare:
 
 For API-based runs, the candidate prompt is modeled as a chat `system` message. This is the closest repeatable analogue to UI Custom Instructions in an automated eval runner.
 
+The default promptfoo suite runs in no-tools mode. Freshness cases should not expect live browsing. They test whether the model recognizes changeable facts and avoids inventing current details. Tool-enabled freshness evals can be added as a separate suite later.
+
 ## Initial Case Categories
 
 - Russian answer quality: Russian output, natural style, sane handling of English technical terms.
@@ -65,6 +67,23 @@ cd evals
 promptfoo eval -c promptfooconfig.yaml
 ```
 
+Save run artifacts:
+
+```bash
+RUN_DIR="../reports/runs/$(date +%Y-%m-%d)"
+mkdir -p "$RUN_DIR"
+promptfoo eval -c promptfooconfig.yaml \
+  --output "$RUN_DIR/results.json" \
+  --output "$RUN_DIR/results.csv" \
+  --output "$RUN_DIR/results.html"
+```
+
+Use the report config for a slower preliminary report run:
+
+```bash
+promptfoo eval -c promptfooconfig.report.yaml
+```
+
 The current suite contains 12 starter cases:
 
 - `russian-style.yaml`
@@ -80,3 +99,5 @@ The config compares:
 - `compact-v0.1.0`: compact prompt as system message plus the same user input.
 
 The candidate system prompt in `evals/prompts/compact-v0.1.0-system.txt` must stay byte-for-byte synced with the fenced prompt block in `prompts/compact.md`. CI checks this with `scripts/count_chars.py --compare-text`.
+
+`promptfooconfig.yaml` is a smoke suite with `repeat: 1`. `promptfooconfig.report.yaml` uses `repeat: 3` and a separate grader setting for report-grade runs. The report config still needs a real API run before publishing benchmark claims.
