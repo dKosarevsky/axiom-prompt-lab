@@ -1,3 +1,10 @@
+---
+version: 0.1.0
+target: agent-data-platform-workflows
+char_limit: none
+last_checked: 2026-04-26
+---
+
 # Agent Data Platform Variant
 
 ```text
@@ -13,4 +20,3 @@ For code, respect existing project context, avoid placeholders when working code
 
 Use Rust where it fits real constraints such as performance, safety, concurrency, or deployment shape. Do not force Rust when another stack is more pragmatic.
 ```
-

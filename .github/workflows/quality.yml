@@ -1,0 +1,36 @@
+name: quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      validate_promptfoo:
+        description: Validate promptfoo config with npx
+        required: false
+        default: "false"
+
+jobs:
+  local-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run tests
+        run: python -m unittest discover -s tests
+      - name: Check compact prompt metadata and limit
+        run: python scripts/count_chars.py prompts/compact.md --check-metadata --compare-text evals/prompts/compact-v0.1.0-system.txt
+
+  promptfoo-validate:
+    if: github.event_name == 'workflow_dispatch' && inputs.validate_promptfoo == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate promptfoo config
+        run: npx promptfoo@latest validate -c evals/promptfooconfig.yaml

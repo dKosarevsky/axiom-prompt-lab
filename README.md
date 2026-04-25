@@ -41,6 +41,20 @@ python3 scripts/count_chars.py prompts/compact.md
 
 Use [prompts/full.md](prompts/full.md) for Projects, GPTs, API system prompts, or agent environments where a longer instruction layer is acceptable.
 
+Run local quality checks:
+
+```bash
+python3 -m unittest discover -s tests
+python3 scripts/count_chars.py prompts/compact.md --check-metadata --compare-text evals/prompts/compact-v0.1.0-system.txt
+```
+
+Run the promptfoo A/B skeleton when you have an API key and want to spend eval budget:
+
+```bash
+cd evals
+promptfoo eval -c promptfooconfig.yaml
+```
+
 ## Repository Layout
 
 ```text
@@ -52,8 +66,12 @@ prompts/
     agent-data-platform.md   Targeted agent/data-platform variant
 evals/
   README.md                  Benchmark methodology and roadmap
+  promptfooconfig.yaml       Runnable promptfoo A/B config
   cases/
-    example.yaml             First benchmark case format
+    *.yaml                   Promptfoo-compatible starter cases
+  prompts/
+    *.json                   Chat prompt templates for baseline and candidate
+    compact-v0.1.0-system.txt Synced eval copy of the compact prompt
   rubrics/
     answer-quality.md        General answer scoring rubric
     agent-engineering.md     Agent/data-platform scoring rubric
@@ -63,7 +81,7 @@ scripts/
 tests/
   test_count_chars.py        Tests for prompt character counting
 reports/
-  .gitkeep                   Future benchmark reports
+  2026-04-26-initial-template.md First report template
 ```
 
 ## Benchmark Philosophy
@@ -94,4 +112,6 @@ For agent/data-platform cases, additional dimensions include tool-use awareness,
 
 ## Current Status
 
-This is the foundation version. It contains the first prompts, repository structure, methodology, and a character-count helper. The next step is adding a runnable prompt comparison suite and the first result report.
+This is the runnable-skeleton version. It contains prompts, version metadata, promptfoo-compatible starter cases, scoring rubrics, a character-count/sync helper, CI checks, and a report template.
+
+The next milestone is running the first benchmark and publishing a completed report.

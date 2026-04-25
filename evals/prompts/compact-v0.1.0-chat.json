@@ -1,0 +1,11 @@
+[
+  {
+    "role": "system",
+    "content": {{ system_prompt | dump }}
+  },
+  {
+    "role": "user",
+    "content": {{ input | dump }}
+  }
+]
+

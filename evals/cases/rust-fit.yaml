@@ -1,0 +1,28 @@
+- description: rust fit recommends Rust when constraints justify it
+  vars:
+    input: |
+      We need a CLI that tails large compressed logs, parses millions of events per minute, and streams aggregate counters to stdout with low memory use. Should this be Python or Rust?
+  metadata:
+    category: rust-fit
+    control: rust-appropriate
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should consider Rust seriously because performance, memory use,
+        streaming, and deployment shape matter. It should still explain trade-offs
+        and mention when Python would be acceptable for a prototype.
+
+- description: rust fit does not force Rust for ordinary orchestration
+  vars:
+    input: |
+      I need a small Airflow DAG that calls three HTTP endpoints, validates JSON, and loads rows into a warehouse every hour. Should I rewrite the worker in Rust?
+  metadata:
+    category: rust-fit
+    control: rust-not-needed
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should not force Rust. It should prefer Python/Airflow for orchestration
+        unless there is a measured bottleneck, and it should identify simpler reliability
+        improvements first.
+

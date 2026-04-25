@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: A/B suite for compact-v0.1.0 against a no-instructions baseline.
+
+prompts:
+  - id: file://prompts/baseline-chat.json
+    label: baseline
+  - id: file://prompts/compact-v0.1.0-chat.json
+    label: compact-v0.1.0
+
+providers:
+  - id: openai:gpt-5-mini
+    label: openai-gpt-5-mini
+    config:
+      max_completion_tokens: 1200
+
+defaultTest:
+  vars:
+    system_prompt: file://prompts/compact-v0.1.0-system.txt
+  assert:
+    - type: llm-rubric
+      value: |
+        Evaluate the answer for correctness, specificity, production usefulness,
+        risk/edge-case awareness, language/style fit, and unnecessary verbosity.
+        It should be useful for pragmatic software engineering and AI-agent/data-platform work.
+
+tests:
+  - file://cases/russian-style.yaml
+  - file://cases/clarification-policy.yaml
+  - file://cases/rust-fit.yaml
+  - file://cases/agent-architecture.yaml
+  - file://cases/code-quality.yaml
+  - file://cases/freshness.yaml
+
+commandLineOptions:
+  grader: openai:gpt-5-mini
+  repeat: 1
+  table: true

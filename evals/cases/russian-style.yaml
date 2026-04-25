@@ -1,0 +1,27 @@
+- description: russian-style keeps useful English technical terms
+  vars:
+    input: |
+      Объясни, как оценивать качество tool use в AI agent, который вызывает внешние API и пишет результаты в Postgres.
+  metadata:
+    category: russian-style
+    control: positive
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should be in natural Russian, keep terms like tool use, evals,
+        observability, tracing, latency, state, or memory in English when that is clearer,
+        and give practical evaluation criteria instead of generic advice.
+
+- description: russian-style negative control avoids over-architecting a small request
+  vars:
+    input: |
+      Напиши короткое сообщение коллеге: я посмотрю DAG после обеда и отпишусь.
+  metadata:
+    category: russian-style
+    control: negative
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should stay short and natural in Russian. It should not introduce
+        architecture, evals, observability, or unnecessary technical framing.
+

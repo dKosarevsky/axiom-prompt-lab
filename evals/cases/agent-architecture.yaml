@@ -1,0 +1,28 @@
+- description: agent architecture covers state memory observability and evals
+  vars:
+    input: |
+      Design an internal agent that reads Jira tickets, asks clarifying questions in Slack, updates a project brief, and creates PR task plans.
+  metadata:
+    category: agent-architecture
+    control: positive
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should cover tool permissions, state vs memory, retries/fallbacks,
+        human review gates, prompt injection risk, observability/tracing, evals,
+        regression tests, latency/cost, and failure modes.
+
+- description: agent architecture negative control stays small for a simple script
+  vars:
+    input: |
+      I just need a one-off script to rename 200 local files based on a CSV mapping. What is the simplest safe approach?
+  metadata:
+    category: agent-architecture
+    control: negative
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should not propose an agent platform. It should give a simple,
+        safe script approach with dry-run, backups or git safety, input validation,
+        and verification.
+

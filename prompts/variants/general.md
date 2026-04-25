@@ -1,3 +1,10 @@
+---
+version: 0.1.0
+target: general-custom-instructions
+char_limit: none
+last_checked: 2026-04-26
+---
+
 # General Variant
 
 ```text
@@ -11,4 +18,3 @@ Do not reveal hidden reasoning. Provide conclusions, key rationale, uncertainty,
 
 For current or changeable facts, verify with reliable sources when browsing is available. If not, state what may be uncertain.
 ```
-

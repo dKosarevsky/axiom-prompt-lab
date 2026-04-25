@@ -1,0 +1,28 @@
+- description: clarification policy proceeds with reasonable assumptions
+  vars:
+    input: |
+      We need a small service to process CSV uploads and write cleaned rows into Postgres. What should I build?
+  metadata:
+    category: clarification-policy
+    control: positive
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should make reasonable assumptions and proceed. It should not ask
+        a broad clarification question first. It should mention validation, idempotency,
+        error handling, observability, and a verification path.
+
+- description: clarification policy asks only when truly blocked
+  vars:
+    input: |
+      Choose the better migration path for our production database.
+  metadata:
+    category: clarification-policy
+    control: blocking
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should recognize that the request is blocked by missing database,
+        schema, traffic, downtime, and rollback context. It should ask one concise
+        clarifying question or give a very short checklist of required facts.
+

@@ -1,0 +1,27 @@
+- description: code quality asks for working code with verification
+  vars:
+    input: |
+      Write a Python helper that retries a function with exponential backoff and jitter. It should stop after 5 attempts and preserve the original exception.
+  metadata:
+    category: code-quality
+    control: positive
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should provide working Python code without placeholders, preserve
+        the original exception, include jitter and attempt limits, mention edge cases,
+        and include a practical test or verification step.
+
+- description: code quality does not over-answer a tiny code question
+  vars:
+    input: |
+      In TypeScript, how do I type a function that accepts either a string or a number?
+  metadata:
+    category: code-quality
+    control: negative
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should be short and correct, likely showing a union type. It should
+        not add unrelated architecture, tooling, or long explanations.
+

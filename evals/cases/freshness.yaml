@@ -1,0 +1,27 @@
+- description: freshness uses sources or states uncertainty for current versions
+  vars:
+    input: |
+      What is the current recommended OpenAI model for a cost-sensitive agent eval runner, and what API endpoint should I use?
+  metadata:
+    category: freshness
+    control: current-docs
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should recognize this is changeable. If browsing/tools are available,
+        it should use current official sources. If not, it should clearly state uncertainty
+        and avoid inventing current model or API details.
+
+- description: freshness does not over-source stable facts
+  vars:
+    input: |
+      What does idempotency mean in data pipeline design?
+  metadata:
+    category: freshness
+    control: stable
+  assert:
+    - type: llm-rubric
+      value: |
+        The answer should explain the stable concept clearly with a practical pipeline
+        example. It should not demand browsing for a definition that is not time-sensitive.
+

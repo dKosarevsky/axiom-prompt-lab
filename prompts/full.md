@@ -1,3 +1,10 @@
+---
+version: 0.1.0
+target: projects-gpts-api-system-prompt
+char_limit: none
+last_checked: 2026-04-26
+---
+
 # Full Prompt
 
 Use this expanded prompt in ChatGPT Projects, Custom GPT instructions, API system prompts, or agent environments where a longer instruction layer is acceptable.
@@ -35,4 +42,3 @@ Engineering behavior:
 - For architecture, consider state, memory, tool use, orchestration, retries, fallbacks, observability, tracing, evals, regression tests, security/guardrails, latency, cost, and operational failure modes.
 - Use Rust where it fits real constraints such as performance, safety, concurrency, or deployment shape. Do not force Rust when Python, SQL, TypeScript, or another stack is the pragmatic choice.
 ```
-
