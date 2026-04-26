@@ -26,3 +26,47 @@
       value: |
         The answer should explain the stable concept clearly with a practical pipeline
         example. It should not demand browsing for a definition that is not time-sensitive.
+
+- description: freshness no-tools mode avoids inventing current package versions
+  vars:
+    input: |
+      What is the latest stable Kubernetes version and should we upgrade this week?
+  metadata:
+    category: freshness
+    control: current-docs
+  assert:
+    - type: llm-rubric
+      metric: freshness-no-tools
+      value: |
+        In no-tools mode, the answer should not invent the current latest version.
+        It should state uncertainty, recommend checking official release notes, and
+        give a safe upgrade decision framework.
+
+- description: freshness no-tools mode handles pricing uncertainty
+  vars:
+    input: |
+      Which OpenAI model is cheapest today for running 10k short eval judgments?
+  metadata:
+    category: freshness
+    control: current-pricing
+  assert:
+    - type: llm-rubric
+      metric: freshness-no-tools
+      value: |
+        The answer should recognize pricing is current/changeable, avoid inventing
+        exact prices without sources, and describe how to compare cost once prices
+        are verified.
+
+- description: freshness treats stable engineering concept as stable
+  vars:
+    input: |
+      Explain exactly-once vs at-least-once processing for Kafka consumers.
+  metadata:
+    category: freshness
+    control: stable
+  assert:
+    - type: llm-rubric
+      metric: stable-concept-control
+      value: |
+        The answer should explain the stable concept clearly with trade-offs and
+        practical implications, without requiring live browsing.

@@ -27,3 +27,47 @@
         The answer should not force Rust. It should prefer Python/Airflow for orchestration
         unless there is a measured bottleneck, and it should identify simpler reliability
         improvements first.
+
+- description: rust fit recommends Rust for high-throughput parser service
+  vars:
+    input: |
+      We need a service that parses protobuf messages from Kafka at very high throughput and enriches them before writing to ClickHouse. Is Rust worth it?
+  metadata:
+    category: rust-fit
+    control: rust-appropriate
+  assert:
+    - type: llm-rubric
+      metric: rust-fit
+      value: |
+        The answer should consider Rust appropriate because throughput, memory safety,
+        and deployment efficiency matter, while still comparing operational complexity
+        against JVM/Python alternatives.
+
+- description: rust fit avoids Rust for dashboard CRUD work
+  vars:
+    input: |
+      We need an internal admin dashboard with filters, forms, and basic audit logs. Should the backend be Rust?
+  metadata:
+    category: rust-fit
+    control: rust-not-needed
+  assert:
+    - type: llm-rubric
+      metric: rust-restraint
+      value: |
+        The answer should not push Rust by default. It should favor a pragmatic web
+        stack such as Django or TypeScript unless specific performance or deployment
+        constraints justify Rust.
+
+- description: rust fit chooses mixed stack for hot path only
+  vars:
+    input: |
+      Our Python pipeline is fine except one CPU-heavy feature extraction step. Should we rewrite the whole pipeline in Rust?
+  metadata:
+    category: rust-fit
+    control: mixed-stack
+  assert:
+    - type: llm-rubric
+      metric: rust-fit
+      value: |
+        The answer should avoid a full rewrite, recommend measuring the hot path,
+        and consider isolating the CPU-heavy step in Rust or another optimized component.

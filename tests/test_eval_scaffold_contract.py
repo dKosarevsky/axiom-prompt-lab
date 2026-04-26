@@ -1,6 +1,8 @@
 import re
 import unittest
 from pathlib import Path
+import subprocess
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,6 +31,18 @@ class EvalScaffoldContractTests(unittest.TestCase):
             self.assertGreater(assert_count, 0, case_path)
             self.assertEqual(metric_count, assert_count, case_path)
 
+    def test_suite_has_at_least_thirty_cases(self) -> None:
+        result = subprocess.run(
+            [sys.executable, "scripts/count_eval_cases.py", "evals/cases", "--min-cases", "30"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("total_cases:", result.stdout)
+
     def test_no_tools_freshness_mode_is_documented(self) -> None:
         readme = (ROOT / "evals" / "README.md").read_text(encoding="utf-8")
 
@@ -39,6 +53,7 @@ class EvalScaffoldContractTests(unittest.TestCase):
         self.assertTrue((ROOT / "reports" / "runs" / ".gitkeep").exists())
         self.assertTrue((ROOT / "reports" / "runs" / "latest" / ".gitkeep").exists())
         self.assertTrue((ROOT / "reports" / "runs" / "report" / ".gitkeep").exists())
+        self.assertTrue((ROOT / "scripts" / "run_promptfoo_report.sh").exists())
 
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
         self.assertIn("## 0.1.0", changelog)

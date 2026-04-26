@@ -26,3 +26,46 @@
       value: |
         The answer should be short and correct, likely showing a union type. It should
         not add unrelated architecture, tooling, or long explanations.
+
+- description: code quality writes idempotent upsert helper
+  vars:
+    input: |
+      Write a Python function that upserts cleaned customer rows into Postgres using a unique customer_id key. Include transaction handling.
+  metadata:
+    category: code-quality
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: code-functional-correctness
+      value: |
+        The answer should provide concrete Python code or SQL-backed code, use a
+        transaction, handle conflict on customer_id, avoid placeholders, and include
+        verification or test guidance.
+
+- description: code quality reviews risky pseudo-code
+  vars:
+    input: |
+      Review this idea: on every failed API call, retry immediately in a while True loop until it works.
+  metadata:
+    category: code-quality
+    control: review
+  assert:
+    - type: llm-rubric
+      metric: code-risk-awareness
+      value: |
+        The answer should flag the unbounded retry risk, recommend backoff, max attempts,
+        timeouts, idempotency, observability, and dead-letter or escalation behavior.
+
+- description: code quality gives minimal SQL answer
+  vars:
+    input: |
+      Write a SQL query to count rows by status in orders.
+  metadata:
+    category: code-quality
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      value: |
+        The answer should provide a short correct SQL query and not expand into
+        unrelated data platform architecture.

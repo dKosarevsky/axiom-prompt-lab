@@ -66,6 +66,14 @@ promptfoo eval -c promptfooconfig.yaml \
   --output "$RUN_DIR/results.html"
 ```
 
+Run the report suite with saved JSON/CSV/HTML outputs:
+
+```bash
+OPENAI_API_KEY=... scripts/run_promptfoo_report.sh 2026-04-26
+```
+
+Or trigger `.github/workflows/eval-report.yml` after adding an `OPENAI_API_KEY` repository secret.
+
 ## Repository Layout
 
 ```text
@@ -90,10 +98,13 @@ evals/
     code-quality.md          Code-focused scoring rubric
 scripts/
   count_chars.py             Custom Instructions character-count helper
+  count_eval_cases.py        Eval suite case-count helper
+  run_promptfoo_report.sh    Report-run wrapper that saves JSON/CSV/HTML outputs
 tests/
   test_count_chars.py        Tests for prompt character counting
 reports/
   runs/                      Saved promptfoo run artifacts
+  2026-04-26-initial.md      Preflight report and API credential blocker
   2026-04-26-initial-template.md First report template
 ```
 
@@ -125,6 +136,6 @@ For agent/data-platform cases, additional dimensions include tool-use awareness,
 
 ## Current Status
 
-This is the runnable-skeleton version. It contains prompts, version metadata, promptfoo-compatible starter cases, scoring rubrics, a character-count/sync helper, CI checks, and a report template.
+This is the runnable-skeleton version. It contains prompts, version metadata, 30 promptfoo-compatible starter cases, scoring rubrics, character-count/sync helpers, CI checks, an eval report workflow, and a report template.
 
-The next milestone is running the first benchmark and publishing a completed report.
+The next milestone is running the first benchmark with an `OPENAI_API_KEY` and publishing completed artifacts and scores.

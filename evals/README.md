@@ -84,7 +84,15 @@ Use the report config for a slower preliminary report run:
 promptfoo eval -c promptfooconfig.report.yaml
 ```
 
-The current suite contains 12 starter cases:
+The repository wrapper saves JSON, CSV, and HTML artifacts:
+
+```bash
+../scripts/run_promptfoo_report.sh 2026-04-26
+```
+
+This requires `OPENAI_API_KEY`. The same report run can be triggered in GitHub Actions through `.github/workflows/eval-report.yml` after adding an `OPENAI_API_KEY` repository secret.
+
+The current suite contains 30 starter cases:
 
 - `russian-style.yaml`
 - `clarification-policy.yaml`
@@ -92,6 +100,12 @@ The current suite contains 12 starter cases:
 - `agent-architecture.yaml`
 - `code-quality.yaml`
 - `freshness.yaml`
+
+Check the count:
+
+```bash
+python3 ../scripts/count_eval_cases.py cases --min-cases 30
+```
 
 The config compares:
 

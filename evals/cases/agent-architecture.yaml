@@ -27,3 +27,46 @@
         The answer should not propose an agent platform. It should give a simple,
         safe script approach with dry-run, backups or git safety, input validation,
         and verification.
+
+- description: agent architecture plans tool permissions and review gates
+  vars:
+    input: |
+      Design an agent that can read production logs, open Linear issues, and suggest rollback commands during incidents.
+  metadata:
+    category: agent-architecture
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: agent-architecture
+      value: |
+        The answer should include least-privilege tool access, read/write separation,
+        human approval before rollback, audit trails, prompt injection risks,
+        observability, latency, and incident failure modes.
+
+- description: agent architecture covers memory lifecycle
+  vars:
+    input: |
+      Our support agent should remember customer preferences across conversations. What memory design should we use?
+  metadata:
+    category: agent-architecture
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: agent-memory
+      value: |
+        The answer should distinguish durable preferences from conversation state,
+        cover consent, deletion, PII, auditability, conflict resolution, and evals.
+
+- description: agent architecture avoids platform for deterministic ETL
+  vars:
+    input: |
+      I need to copy yesterday's S3 files into a warehouse and alert on row-count mismatch. Should I build an AI agent?
+  metadata:
+    category: agent-architecture
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      value: |
+        The answer should avoid recommending an AI agent. It should prefer deterministic
+        orchestration, checks, alerting, retries, and clear verification.

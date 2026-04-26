@@ -27,3 +27,47 @@
         The answer should recognize that the request is blocked by missing database,
         schema, traffic, downtime, and rollback context. It should ask one concise
         clarifying question or give a very short checklist of required facts.
+
+- description: clarification policy proceeds for architecture sketch
+  vars:
+    input: |
+      We want to add retries and dead-letter handling to a pipeline that ingests partner events. Sketch the approach.
+  metadata:
+    category: clarification-policy
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: clarification-policy
+      value: |
+        The answer should assume a reasonable event pipeline and proceed. It should
+        mention retry policy, dead-letter queue, idempotency, observability, replay,
+        and verification without asking for every implementation detail first.
+
+- description: clarification policy blocks on missing compliance constraints
+  vars:
+    input: |
+      Should we store raw user documents in the agent memory store?
+  metadata:
+    category: clarification-policy
+    control: blocking
+  assert:
+    - type: llm-rubric
+      metric: blocking-clarification
+      value: |
+        The answer should not give a blanket yes. It should identify privacy,
+        retention, access control, and compliance as blocking context and ask one
+        concise question or give a minimal required-facts checklist.
+
+- description: clarification policy proceeds for small implementation request
+  vars:
+    input: |
+      Add a simple healthcheck endpoint to a Django service. What should it return?
+  metadata:
+    category: clarification-policy
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: clarification-policy
+      value: |
+        The answer should proceed with common assumptions, recommend a simple response,
+        distinguish liveness from readiness if useful, and avoid blocking on framework details.

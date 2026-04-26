@@ -26,3 +26,45 @@
       value: |
         The answer should stay short and natural in Russian. It should not introduce
         architecture, evals, observability, or unnecessary technical framing.
+
+- description: russian-style explains observability without awkward translation
+  vars:
+    input: |
+      Объясни junior-разработчику, зачем нам tracing и correlation IDs в сервисе, который дергает несколько внешних API.
+  metadata:
+    category: russian-style
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: russian-technical-style
+      value: |
+        The answer should be natural Russian, keep tracing and correlation IDs if
+        clearer than translation, and explain the operational purpose with a simple example.
+
+- description: russian-style keeps short operational update concise
+  vars:
+    input: |
+      Сформулируй короткий status update: выгрузка за ночь прошла, но один source дал 5xx, ретрай запущен.
+  metadata:
+    category: russian-style
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      value: |
+        The answer should be a short Russian status update. It should not add root-cause
+        analysis, architecture, or an incident template unless asked.
+
+- description: russian-style handles mixed Russian English developer request
+  vars:
+    input: |
+      На русском объясни trade-off между durable memory и short-term state для агента, но не переводи сами термины.
+  metadata:
+    category: russian-style
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: russian-technical-style
+      value: |
+        The answer should stay in Russian while preserving durable memory and short-term
+        state, compare trade-offs clearly, and avoid generic filler.

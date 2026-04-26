@@ -1,0 +1,36 @@
+name: eval-report
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Report run id
+        required: false
+        default: manual
+
+jobs:
+  promptfoo-report:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check OpenAI API key
+        run: test -n "$OPENAI_API_KEY"
+      - name: Run promptfoo report eval
+        run: |
+          RUN_ID="${{ inputs.run_id }}"
+          RUN_DIR="../reports/runs/${RUN_ID}"
+          mkdir -p "$RUN_DIR"
+          cd evals
+          npx promptfoo@latest eval -c promptfooconfig.report.yaml \
+            --output "$RUN_DIR/results.json" \
+            --output "$RUN_DIR/results.csv" \
+            --output "$RUN_DIR/results.html"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: promptfoo-report-${{ inputs.run_id }}
+          path: reports/runs/${{ inputs.run_id }}/
