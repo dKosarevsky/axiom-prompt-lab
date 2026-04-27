@@ -92,7 +92,15 @@ The repository wrapper saves JSON, CSV, and HTML artifacts:
 
 This requires `OPENAI_API_KEY`. The same report run can be triggered in GitHub Actions through `.github/workflows/eval-report.yml` after adding an `OPENAI_API_KEY` repository secret.
 
-The current suite contains 30 starter cases:
+Summarize JSON results:
+
+```bash
+python3 ../scripts/summarize_promptfoo_results.py \
+  ../reports/runs/2026-04-26/results.json \
+  --output ../reports/2026-04-26-summary.md
+```
+
+The current suite contains 60 starter cases:
 
 - `russian-style.yaml`
 - `clarification-policy.yaml`
@@ -104,7 +112,7 @@ The current suite contains 30 starter cases:
 Check the count:
 
 ```bash
-python3 ../scripts/count_eval_cases.py cases --min-cases 30
+python3 ../scripts/count_eval_cases.py cases --min-cases 60
 ```
 
 The config compares:

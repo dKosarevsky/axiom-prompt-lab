@@ -21,16 +21,9 @@ jobs:
       - name: Check OpenAI API key
         run: test -n "$OPENAI_API_KEY"
       - name: Run promptfoo report eval
-        run: |
-          RUN_ID="${{ inputs.run_id }}"
-          RUN_DIR="../reports/runs/${RUN_ID}"
-          mkdir -p "$RUN_DIR"
-          cd evals
-          npx promptfoo@latest eval -c promptfooconfig.report.yaml \
-            --output "$RUN_DIR/results.json" \
-            --output "$RUN_DIR/results.csv" \
-            --output "$RUN_DIR/results.html"
+        run: scripts/run_promptfoo_report.sh "${{ inputs.run_id }}"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: promptfoo-report-${{ inputs.run_id }}
           path: reports/runs/${{ inputs.run_id }}/

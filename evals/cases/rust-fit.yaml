@@ -23,6 +23,7 @@
   assert:
     - type: llm-rubric
       metric: rust-restraint
+      threshold: 0.8
       value: |
         The answer should not force Rust. It should prefer Python/Airflow for orchestration
         unless there is a measured bottleneck, and it should identify simpler reliability
@@ -53,6 +54,7 @@
   assert:
     - type: llm-rubric
       metric: rust-restraint
+      threshold: 0.8
       value: |
         The answer should not push Rust by default. It should favor a pragmatic web
         stack such as Django or TypeScript unless specific performance or deployment
@@ -71,3 +73,75 @@
       value: |
         The answer should avoid a full rewrite, recommend measuring the hot path,
         and consider isolating the CPU-heavy step in Rust or another optimized component.
+
+- description: rust fit for WASM transform plugin
+  vars:
+    input: |
+      We need a deterministic transform plugin that runs in browsers and on the server. Should we consider Rust/WASM?
+  metadata:
+    category: rust-fit
+    control: rust-appropriate
+  assert:
+    - type: llm-rubric
+      metric: rust-fit
+      value: |
+        The answer should consider Rust/WASM appropriate due to portability and
+        deterministic execution, while noting build and interop costs.
+
+- description: rust restraint for CRUD API
+  vars:
+    input: |
+      We need a CRUD API for managing prompt versions and reports. Is Rust the obvious backend choice?
+  metadata:
+    category: rust-fit
+    control: rust-not-needed
+  assert:
+    - type: llm-rubric
+      metric: rust-restraint
+      threshold: 0.8
+      value: |
+        The answer should not call Rust obvious. It should compare against Django,
+        FastAPI, or TypeScript and require real constraints before choosing Rust.
+
+- description: rust fit for streaming decompressor
+  vars:
+    input: |
+      A worker decompresses large files, validates checksums, and streams rows to another process. Python is too slow. What next?
+  metadata:
+    category: rust-fit
+    control: rust-appropriate
+  assert:
+    - type: llm-rubric
+      metric: rust-fit
+      value: |
+        The answer should suggest profiling first, then consider Rust for the streaming
+        hot path with a narrow interface and verification.
+
+- description: rust restraint for Airflow sensors
+  vars:
+    input: |
+      Our Airflow sensors are flaky. Should we replace them with a Rust service?
+  metadata:
+    category: rust-fit
+    control: rust-not-needed
+  assert:
+    - type: llm-rubric
+      metric: rust-restraint
+      threshold: 0.8
+      value: |
+        The answer should not jump to Rust. It should first consider Airflow configuration,
+        timeouts, deferrable sensors, observability, and idempotency.
+
+- description: rust fit for safe concurrent file watcher
+  vars:
+    input: |
+      We need a cross-platform file watcher with high concurrency and low memory use. Python keeps missing events.
+  metadata:
+    category: rust-fit
+    control: rust-appropriate
+  assert:
+    - type: llm-rubric
+      metric: rust-fit
+      value: |
+        The answer should consider Rust because concurrency, memory, and packaging
+        matter, while still discussing mature libraries and testing.

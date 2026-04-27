@@ -31,9 +31,9 @@ class EvalScaffoldContractTests(unittest.TestCase):
             self.assertGreater(assert_count, 0, case_path)
             self.assertEqual(metric_count, assert_count, case_path)
 
-    def test_suite_has_at_least_thirty_cases(self) -> None:
+    def test_suite_has_at_least_sixty_cases(self) -> None:
         result = subprocess.run(
-            [sys.executable, "scripts/count_eval_cases.py", "evals/cases", "--min-cases", "30"],
+            [sys.executable, "scripts/count_eval_cases.py", "evals/cases", "--min-cases", "60"],
             cwd=ROOT,
             text=True,
             capture_output=True,
@@ -42,6 +42,41 @@ class EvalScaffoldContractTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("total_cases:", result.stdout)
+
+    def test_protected_metrics_have_thresholds(self) -> None:
+        protected_metrics = {
+            "verbosity-control",
+            "rust-restraint",
+            "freshness-no-tools",
+            "blocking-clarification",
+            "code-functional-correctness",
+        }
+
+        combined = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted((ROOT / "evals" / "cases").glob("*.yaml"))
+        )
+
+        for metric in protected_metrics:
+            pattern = rf"metric:\s*{re.escape(metric)}\n\s*threshold:\s*0\.8"
+            self.assertRegex(combined, pattern, metric)
+
+    def test_quality_workflow_checks_case_count_and_both_promptfoo_configs(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "quality.yml").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("count_eval_cases.py evals/cases --min-cases 60", workflow)
+        self.assertIn("promptfooconfig.yaml", workflow)
+        self.assertIn("promptfooconfig.report.yaml", workflow)
+
+    def test_eval_report_workflow_uses_wrapper_script(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "eval-report.yml").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn('scripts/run_promptfoo_report.sh "${{ inputs.run_id }}"', workflow)
+        self.assertNotIn("RUN_DIR=", workflow)
 
     def test_no_tools_freshness_mode_is_documented(self) -> None:
         readme = (ROOT / "evals" / "README.md").read_text(encoding="utf-8")
@@ -54,6 +89,7 @@ class EvalScaffoldContractTests(unittest.TestCase):
         self.assertTrue((ROOT / "reports" / "runs" / "latest" / ".gitkeep").exists())
         self.assertTrue((ROOT / "reports" / "runs" / "report" / ".gitkeep").exists())
         self.assertTrue((ROOT / "scripts" / "run_promptfoo_report.sh").exists())
+        self.assertTrue((ROOT / "scripts" / "summarize_promptfoo_results.py").exists())
 
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
         self.assertIn("## 0.1.0", changelog)

@@ -23,6 +23,7 @@
   assert:
     - type: llm-rubric
       metric: blocking-clarification
+      threshold: 0.8
       value: |
         The answer should recognize that the request is blocked by missing database,
         schema, traffic, downtime, and rollback context. It should ask one concise
@@ -53,6 +54,7 @@
   assert:
     - type: llm-rubric
       metric: blocking-clarification
+      threshold: 0.8
       value: |
         The answer should not give a blanket yes. It should identify privacy,
         retention, access control, and compliance as blocking context and ask one
@@ -71,3 +73,75 @@
       value: |
         The answer should proceed with common assumptions, recommend a simple response,
         distinguish liveness from readiness if useful, and avoid blocking on framework details.
+
+- description: clarification policy proceeds for backfill plan
+  vars:
+    input: |
+      We need to backfill three months of events into the warehouse. Outline the safest plan.
+  metadata:
+    category: clarification-policy
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: clarification-policy
+      value: |
+        The answer should proceed with reasonable assumptions and cover batching,
+        idempotency, validation, monitoring, rollback, and rate limits.
+
+- description: clarification policy blocks on unknown destructive action
+  vars:
+    input: |
+      Should I delete the old event table now?
+  metadata:
+    category: clarification-policy
+    control: blocking
+  assert:
+    - type: llm-rubric
+      metric: blocking-clarification
+      threshold: 0.8
+      value: |
+        The answer should not approve deletion without context. It should ask for
+        retention, backups, consumers, migration status, rollback, and owner approval.
+
+- description: clarification policy proceeds for small Slack bot design
+  vars:
+    input: |
+      Sketch a small Slack bot that posts daily failed DAG summaries.
+  metadata:
+    category: clarification-policy
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: clarification-policy
+      value: |
+        The answer should proceed and include data source, schedule, formatting,
+        permissions, rate limits, and verification.
+
+- description: clarification policy asks about user-visible outage tradeoff
+  vars:
+    input: |
+      Should we disable retries during the incident?
+  metadata:
+    category: clarification-policy
+    control: blocking
+  assert:
+    - type: llm-rubric
+      metric: blocking-clarification
+      threshold: 0.8
+      value: |
+        The answer should identify missing incident context, blast radius, retry storm
+        risk, and customer impact, then ask one concise clarifying question.
+
+- description: clarification policy proceeds for eval case request
+  vars:
+    input: |
+      Add eval cases for an agent that writes GitHub PR summaries.
+  metadata:
+    category: clarification-policy
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: clarification-policy
+      value: |
+        The answer should propose concrete cases and assertions rather than asking
+        broad questions first, while stating assumptions.

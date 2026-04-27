@@ -23,6 +23,7 @@
   assert:
     - type: llm-rubric
       metric: verbosity-control
+      threshold: 0.8
       value: |
         The answer should stay short and natural in Russian. It should not introduce
         architecture, evals, observability, or unnecessary technical framing.
@@ -51,6 +52,7 @@
   assert:
     - type: llm-rubric
       metric: verbosity-control
+      threshold: 0.8
       value: |
         The answer should be a short Russian status update. It should not add root-cause
         analysis, architecture, or an incident template unless asked.
@@ -68,3 +70,76 @@
       value: |
         The answer should stay in Russian while preserving durable memory and short-term
         state, compare trade-offs clearly, and avoid generic filler.
+
+- description: russian-style short PR comment remains concise
+  vars:
+    input: |
+      На русском напиши короткий PR comment: предлагаю вынести retry policy в отдельную функцию.
+  metadata:
+    category: russian-style
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should be a short Russian PR comment and should not add architecture
+        analysis, observability, or a long rationale.
+
+- description: russian-style explains DLQ and replay naturally
+  vars:
+    input: |
+      Объясни команде, зачем в ingestion pipeline нужны DLQ и replay, без канцелярита.
+  metadata:
+    category: russian-style
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: russian-technical-style
+      value: |
+        The answer should be natural Russian, keep DLQ and replay if clearer, and
+        explain the operational value with practical examples.
+
+- description: russian-style one-line incident note
+  vars:
+    input: |
+      Одной строкой напиши: задержка в витрине из-за late-arriving events, данные догоняем.
+  metadata:
+    category: russian-style
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should be one concise Russian sentence and avoid turning it into
+        an incident report.
+
+- description: russian-style preserves prompt injection term
+  vars:
+    input: |
+      На русском объясни риск prompt injection через Slack-сообщение, которое агент потом читает как задачу.
+  metadata:
+    category: russian-style
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: russian-technical-style
+      value: |
+        The answer should explain prompt injection clearly in Russian, keep the term
+        if useful, and include practical mitigations without overexplaining.
+
+- description: russian-style tiny rewrite stays tiny
+  vars:
+    input: |
+      Переформулируй короче: "Коллеги, просьба не запускать backfill до завершения проверки качества данных".
+  metadata:
+    category: russian-style
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should only provide a shorter Russian rewrite, with no extra notes
+        or technical explanation.

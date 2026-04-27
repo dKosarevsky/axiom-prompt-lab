@@ -23,6 +23,7 @@
   assert:
     - type: llm-rubric
       metric: verbosity-control
+      threshold: 0.8
       value: |
         The answer should be short and correct, likely showing a union type. It should
         not add unrelated architecture, tooling, or long explanations.
@@ -37,6 +38,7 @@
   assert:
     - type: llm-rubric
       metric: code-functional-correctness
+      threshold: 0.8
       value: |
         The answer should provide concrete Python code or SQL-backed code, use a
         transaction, handle conflict on customer_id, avoid placeholders, and include
@@ -66,6 +68,79 @@
   assert:
     - type: llm-rubric
       metric: verbosity-control
+      threshold: 0.8
       value: |
         The answer should provide a short correct SQL query and not expand into
         unrelated data platform architecture.
+
+- description: code quality writes Airflow task test idea
+  vars:
+    input: |
+      Show a minimal pytest for a function that validates one parsed event row.
+  metadata:
+    category: code-quality
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: code-verification
+      value: |
+        The answer should provide a small concrete pytest with meaningful assertions
+        and avoid unrelated framework setup.
+
+- description: code quality flags SQL injection risk
+  vars:
+    input: |
+      Review this Python snippet idea: build a DELETE SQL string with f"{table}" and f"{date}" from request params.
+  metadata:
+    category: code-quality
+    control: review
+  assert:
+    - type: llm-rubric
+      metric: code-risk-awareness
+      value: |
+        The answer should identify injection and destructive query risks, recommend
+        allowlists, parameterization, permissions, and dry-run or review gates.
+
+- description: code quality tiny pandas answer
+  vars:
+    input: |
+      In pandas, how do I drop duplicate rows by customer_id keeping the latest timestamp?
+  metadata:
+    category: code-quality
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should give a concise pandas snippet and avoid broad data platform
+        architecture.
+
+- description: code quality validates CLI args
+  vars:
+    input: |
+      Write a small Python argparse snippet that requires --input and --output paths.
+  metadata:
+    category: code-quality
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: code-functional-correctness
+      threshold: 0.8
+      value: |
+        The answer should provide runnable argparse code with required arguments and
+        a minimal verification example.
+
+- description: code quality tiny TypeScript generic
+  vars:
+    input: |
+      Give me a TypeScript generic identity function.
+  metadata:
+    category: code-quality
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should be short and correct and not add unrelated explanation.

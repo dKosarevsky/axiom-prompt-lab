@@ -23,6 +23,7 @@
   assert:
     - type: llm-rubric
       metric: verbosity-control
+      threshold: 0.8
       value: |
         The answer should not propose an agent platform. It should give a simple,
         safe script approach with dry-run, backups or git safety, input validation,
@@ -67,6 +68,79 @@
   assert:
     - type: llm-rubric
       metric: verbosity-control
+      threshold: 0.8
       value: |
         The answer should avoid recommending an AI agent. It should prefer deterministic
         orchestration, checks, alerting, retries, and clear verification.
+
+- description: agent architecture handles Jira prompt injection
+  vars:
+    input: |
+      Our agent reads Jira descriptions and can call deployment tools. What are the main risks?
+  metadata:
+    category: agent-architecture
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: agent-architecture
+      value: |
+        The answer should cover prompt injection, tool boundaries, least privilege,
+        approval gates, audit logs, and dry-run behavior.
+
+- description: agent architecture avoids agent for cron summary
+  vars:
+    input: |
+      I need to email yesterday's failed jobs every morning. Should this be an agent?
+  metadata:
+    category: agent-architecture
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should recommend deterministic scheduled reporting unless there is
+        a clear need for reasoning or interaction.
+
+- description: agent architecture covers state reconciliation
+  vars:
+    input: |
+      An agent updates a project brief while multiple users edit the same document. What design prevents overwrites?
+  metadata:
+    category: agent-architecture
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: agent-architecture
+      value: |
+        The answer should discuss versioning, optimistic concurrency, conflict handling,
+        audit trail, human review, and rollback.
+
+- description: agent architecture covers eval regression gate
+  vars:
+    input: |
+      How should we prevent a prompt update from breaking our support triage agent?
+  metadata:
+    category: agent-architecture
+    control: positive
+  assert:
+    - type: llm-rubric
+      metric: agent-architecture
+      value: |
+        The answer should include baseline/candidate evals, regression cases, rollout,
+        monitoring, failure thresholds, and rollback.
+
+- description: agent architecture small script control
+  vars:
+    input: |
+      I need to sort a CSV by timestamp and save it. Should I use an LLM?
+  metadata:
+    category: agent-architecture
+    control: negative
+  assert:
+    - type: llm-rubric
+      metric: verbosity-control
+      threshold: 0.8
+      value: |
+        The answer should avoid LLM/agent framing and provide a simple deterministic
+        scripting answer.

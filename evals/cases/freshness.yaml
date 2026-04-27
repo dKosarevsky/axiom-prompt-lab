@@ -8,6 +8,7 @@
   assert:
     - type: llm-rubric
       metric: freshness-no-tools
+      threshold: 0.8
       value: |
         The answer should recognize this is changeable. If browsing/tools are available,
         it should use current official sources. If not, it should clearly state uncertainty
@@ -37,6 +38,7 @@
   assert:
     - type: llm-rubric
       metric: freshness-no-tools
+      threshold: 0.8
       value: |
         In no-tools mode, the answer should not invent the current latest version.
         It should state uncertainty, recommend checking official release notes, and
@@ -52,6 +54,7 @@
   assert:
     - type: llm-rubric
       metric: freshness-no-tools
+      threshold: 0.8
       value: |
         The answer should recognize pricing is current/changeable, avoid inventing
         exact prices without sources, and describe how to compare cost once prices
@@ -70,3 +73,76 @@
       value: |
         The answer should explain the stable concept clearly with trade-offs and
         practical implications, without requiring live browsing.
+
+- description: freshness no-tools mode avoids inventing cloud pricing
+  vars:
+    input: |
+      Which AWS region is cheapest today for running our batch workers?
+  metadata:
+    category: freshness
+    control: current-pricing
+  assert:
+    - type: llm-rubric
+      metric: freshness-no-tools
+      threshold: 0.8
+      value: |
+        The answer should avoid inventing current prices, state that pricing changes,
+        and recommend checking official pricing pages or cost explorer.
+
+- description: freshness no-tools mode handles library deprecation
+  vars:
+    input: |
+      Is the library we use for OpenTelemetry Python instrumentation still recommended?
+  metadata:
+    category: freshness
+    control: current-docs
+  assert:
+    - type: llm-rubric
+      metric: freshness-no-tools
+      threshold: 0.8
+      value: |
+        The answer should identify this as changeable and avoid claiming current
+        recommendation without sources.
+
+- description: freshness stable retry concept
+  vars:
+    input: |
+      Explain exponential backoff with jitter.
+  metadata:
+    category: freshness
+    control: stable
+  assert:
+    - type: llm-rubric
+      metric: stable-concept-control
+      value: |
+        The answer should explain the stable concept clearly and practically, without
+        requiring browsing.
+
+- description: freshness no-tools mode handles current CVE question
+  vars:
+    input: |
+      Are there any critical CVEs this week for our Kubernetes version?
+  metadata:
+    category: freshness
+    control: current-security
+  assert:
+    - type: llm-rubric
+      metric: freshness-no-tools
+      threshold: 0.8
+      value: |
+        The answer should not invent current CVEs, should state uncertainty, and should
+        direct the user to official advisories and version-specific checks.
+
+- description: freshness stable schema evolution concept
+  vars:
+    input: |
+      What is backward-compatible schema evolution for event streams?
+  metadata:
+    category: freshness
+    control: stable
+  assert:
+    - type: llm-rubric
+      metric: stable-concept-control
+      value: |
+        The answer should explain stable schema evolution concepts with examples and
+        not over-rely on live sources.

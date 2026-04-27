@@ -74,6 +74,14 @@ OPENAI_API_KEY=... scripts/run_promptfoo_report.sh 2026-04-26
 
 Or trigger `.github/workflows/eval-report.yml` after adding an `OPENAI_API_KEY` repository secret.
 
+Summarize a completed JSON run:
+
+```bash
+python3 scripts/summarize_promptfoo_results.py \
+  reports/runs/2026-04-26/results.json \
+  --output reports/2026-04-26-summary.md
+```
+
 ## Repository Layout
 
 ```text
@@ -100,6 +108,7 @@ scripts/
   count_chars.py             Custom Instructions character-count helper
   count_eval_cases.py        Eval suite case-count helper
   run_promptfoo_report.sh    Report-run wrapper that saves JSON/CSV/HTML outputs
+  summarize_promptfoo_results.py Promptfoo JSON-to-Markdown summarizer
 tests/
   test_count_chars.py        Tests for prompt character counting
 reports/
@@ -136,6 +145,6 @@ For agent/data-platform cases, additional dimensions include tool-use awareness,
 
 ## Current Status
 
-This is the runnable-skeleton version. It contains prompts, version metadata, 30 promptfoo-compatible starter cases, scoring rubrics, character-count/sync helpers, CI checks, an eval report workflow, and a report template.
+Current status: benchmark-ready preflight, not benchmark-backed yet. It contains prompts, version metadata, 60 promptfoo-compatible starter cases, scoring rubrics, character-count/sync helpers, CI checks, an eval report workflow, and a report template.
 
 The next milestone is running the first benchmark with an `OPENAI_API_KEY` and publishing completed artifacts and scores.
